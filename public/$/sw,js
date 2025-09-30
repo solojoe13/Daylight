@@ -1,6 +1,12 @@
+if (navigator.userAgent.includes("Firefox")) {
+	Object.defineProperty(globalThis, "crossOriginIsolated", {
+		value: true,
+		writable: false,
+	});
+} // firefox fix
+
 importScripts(
-	"/$/scramjet.codecs.js",
-	"/$/scramjet.config.js",
+	"/$/scramjet.wasm.js",
 	"/$/scramjet.shared.js",
 	"/$/scramjet.worker.js"
 );
@@ -8,6 +14,7 @@ importScripts(
 const scramjet = new ScramjetServiceWorker();
 
 async function handleRequest(event) {
+	await scramjet.loadConfig();
 	if (scramjet.route(event)) {
 		return scramjet.fetch(event);
 	}
