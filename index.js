@@ -18,7 +18,7 @@ import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 import { meteorPath } from "meteorproxy"
 import wisp from "wisp-server-node";
 import { createBareServer } from "@tomphttp/bare-server-node"
-//wahts the library i forgot
+import RateLimit from "express-rate-limit";
 import net from "node:net"
 import { hostname } from "node:os"
 const __filename = fileURLToPath(import.meta.url);
@@ -62,6 +62,14 @@ const img = ["img/favicon_dark.png", "img/favicon_light.png", "img/bg/bgDark.png
 const proxies = [
     "!/meteor.config.js",
     "!/sw.js",
+    "!/meteor.bundle.js",
+    "!/meteor.bundle.js.map",
+    "!/meteor.client.js",
+    "!/meteor.client.js.map",
+    "!/meteor.codecs.js",
+    "!/meteor.config.js",
+    "!/meteor.worker.js",
+    "!/meteor.worker.js.map",
     "&/sw.js",
     "&/uv.config.js",
     "&/uv.bundle.js",
@@ -83,18 +91,9 @@ const proxies = [
     "$/scramjet.worker.js.map",
     "epoxy/index.js",
     "epoxy/index.mjs",
-    "epoxy/module.js",
     "libcurl/index.cjs",
     "libcurl/index.js",
-    "libcurl/index.mjs",
-    "!/meteor.bundle.js",
-    "!/meteor.bundle.js.map",
-    "!/meteor.client.js",
-    "!/meteor.client.js.map",
-    "!/meteor.codecs.js",
-    "!/meteor.config.js",
-    "!/meteor.worker.js",
-    "!/meteor.worker.js.map"
+    "libcurl/index.mjs"
 ];
 
 function checkFiles(files, baseDir) {
@@ -194,7 +193,7 @@ async function updateDaylight() {
     const spinner = ora("Updating Daylight...").start();
     try {
         await new Promise((resolve, reject) => {
-            exec("git pull", (error, stdout, stderr) => {
+            exec("git pull --force --allow-unrelated-histories", (error, stdout, stderr) => {
                 if (error) return reject(error);
                 console.log(stdout);
                 if (stderr) console.error(stderr);
@@ -295,6 +294,15 @@ function startServer() {
     console.log(chalk.green("Serving", chalk.yellow("Daylight's"), chalk.green("files")));
     console.log(chalk.green("All necessary files served. Setting up server."))
 
+    // set up rate limiter: maximum of 100 requests per 15 minutes
+    const limiter = RateLimit({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: 100, // max 100 requests per windowMs
+    });
+
+    // apply rate limiter to all requests
+    app.use(limiter);
+
     app.get("/", (req, res) => {
         res.sendFile(path.join(__dirname, "dist/index.html"));
     });
@@ -323,7 +331,7 @@ function startServer() {
             app(req, res);
         }
     });
-    
+
     server.on("upgrade", (req, socket, head) => {
         if (bare.shouldRoute(req)) {
             bare.routeUpgrade(req, socket, head)
@@ -332,19 +340,17 @@ function startServer() {
         } else if (req.url.endsWith("/wisp")) {
             wisp.routeRequest(
                 req, socket, head);
-            //types!!!
+
         } else {
             socket.destroy();
         }
     });
-    //should we run now
-    //i think we just ru
     server.on("listening", () => {
         const address = server.address();
-        
-        
+
+
         const theme = chalk.hex("#FFECA1");
-       
+
         const host = chalk.hex("#060270");
         console.log(chalk.bold(theme(`
         ██████╗  █████╗ ██╗   ██╗██╗     ██╗ ██████╗ ██╗  ██╗████████╗
@@ -356,34 +362,34 @@ function startServer() {
                                                                       
         `)));
         console.log(`  ${chalk.bold(host("Local System:"))}            http://${address.family === "IPv6" ? `[${address.address}]` : address.address}${address.port === 80 ? "" : ":" + chalk.bold(address.port)}`);
-    
+
         console.log(`  ${chalk.bold(host("Local System:"))}            http://localhost${address.port === 8080 ? "" : ":" + chalk.bold(address.port)}`);
-    
+
         try {
             console.log(`  ${chalk.bold(host("On Your Network:"))}  http://${hostname()}${address.port === 8080 ? "" : ":" + chalk.bold(address.port)}`);
         } catch (err) {
             // can't find LAN interface
         }
-    
+
         if (process.env.REPL_SLUG && process.env.REPL_OWNER) {
             console.log(`  ${chalk.bold(host("Replit:"))}           https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`);
         }
-    
+
         if (process.env.HOSTNAME && process.env.GITPOD_WORKSPACE_CLUSTER_HOST) {
             console.log(`  ${chalk.bold(host("Gitpod:"))}           https://${PORT}-${process.env.HOSTNAME}.${process.env.GITPOD_WORKSPACE_CLUSTER_HOST}`);
         }
-    
+
         if (process.env.CODESPACE_NAME && process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN) {
             console.log(`  ${chalk.bold(host("Github Codespaces:"))}           https://${process.env.CODESPACE_NAME}-${address.port === 80 ? "" : address.port}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`);
         }
-        
+
     });
-    
+
     server.listen({ port: PORT });
-    
-    
+
+
     server.setMaxListeners(0);
-    
-   
+
+
 
 }
