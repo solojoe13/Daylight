@@ -19,16 +19,16 @@ The official instance (demo) is available [here](https://daylight-prod.vercel.ap
 
 ## Deployment
 
-# To run the Daylight demo, first clone the repo by running: 
+### To run the Daylight demo, first clone the repo by running: 
 ```
 git clone https://github.com/NightProxy/Daylight
 ```
-# Then, go into the newly created folder, named Daylight.
+### Then, go into the newly created folder, named Daylight.
 ```
 cd Daylight
 ```
 
-# Then, run this code:
+### Then, run this code:
 
 ```
 npm i && npm run dyl
