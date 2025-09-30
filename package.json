@@ -1,14 +1,13 @@
 {
   "name": "daylight",
   "private": true,
-  "version": "0.0.5",
+  "version": "0.5.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "dyl": "node index.js", 
-    
+    "dyl": "node index.js",
     "daylight": "node index.js",
     "start": "npm run daylight",
     "preview": "vite preview"
@@ -98,7 +97,8 @@
     "vite-plugin-static-copy": "^1.0.6",
     "vite-plugin-vsharp": "^1.8.1",
     "wisp-server-node": "^1.1.3",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "express-rate-limit": "^7.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.9",
@@ -135,5 +135,30 @@
     "webpack": "^5.93.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.4"
-  }
+  },
+  "description": "The minimalistic browser. | Entry for TitaniumNetwork's Proxathon 2024 |",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NightProxy/Daylight.git"
+  },
+  "keywords": [
+    "unblock",
+    "proxy",
+    "titaniumnetwork",
+    "tn",
+    "school",
+    "minimalism",
+    "alpha",
+    "unfinished",
+    "secure",
+    "encrypted",
+    "proxy"
+  ],
+  "author": "Night Network",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/NightProxy/Daylight/issues"
+  },
+  "homepage": "https://github.com/NightProxy/Daylight#readme"
 }
