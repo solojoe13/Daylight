@@ -1,21 +1,16 @@
-// sw.js
-self.addEventListener('install', (event) => {
-    console.log("Service worker installed");
-    self.skipWaiting();
-});
+importScripts('/!/meteor.codecs.js')
+importScripts('/!/meteor.config.js')
+importScripts('/!/meteor.bundle.js')
+importScripts('/!/meteor.worker.js')
 
+const meteor = new MeteorServiceWorker()
+function handleRequest(event) {
+  if (meteor.shouldRoute(event)) {
+    return meteor.handleFetch(event)
+  }
+
+  return fetch(event.request)
+}
 self.addEventListener('fetch', (event) => {
-    const url = new URL(event.request.url);
-
-    // Intercept proxy requests
-    if (url.pathname.startsWith('/proxy')) {
-        event.respondWith(
-            fetch(event.request)
-                .then(res => res)
-                .catch(err => new Response(JSON.stringify({ error: err.message }), {
-                    status: 500,
-                    headers: { 'Content-Type': 'application/json' }
-                }))
-        );
-    }
-});
+  event.respondWith(handleRequest(event))
+})
