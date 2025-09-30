@@ -1,16 +1,13 @@
-importScripts('/!/meteor.codecs.js')
-importScripts('/!/meteor.config.js')
-importScripts('/!/meteor.bundle.js')
-importScripts('/!/meteor.worker.js')
+// sw.js
 
-const meteor = new MeteorServiceWorker()
-function handleRequest(event) {
-  if (meteor.shouldRoute(event)) {
-    return meteor.handleFetch(event)
-  }
+self.addEventListener('install', (event) => {
+    console.log("Service worker installed");
+    self.skipWaiting();
+});
 
-  return fetch(event.request)
-}
 self.addEventListener('fetch', (event) => {
-  event.respondWith(handleRequest(event))
-})
+    const url = new URL(event.request.url);
+    if (url.pathname.startsWith('/proxy')) {
+        event.respondWith(fetch(event.request));
+    }
+});
