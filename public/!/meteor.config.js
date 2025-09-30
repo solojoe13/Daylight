@@ -1,13 +1,11 @@
-import type { Config } from './types'
-
-export const config: Config = {
-  prefix: '/route/',
+export const config = {
+  prefix: "/route/",
   codec: self.$meteor_codecs.xor,
   debug: true,
 
   plugins: [
     {
-      name: 'exampleplugin',
+      name: "exampleplugin",
       filter: /https:\/\/example.com*/g,
       async inject(ctx) {
         await ctx.injectHTML(`
@@ -16,13 +14,13 @@ export const config: Config = {
           `)
       },
       async onRequest(request) {
-        request.headers.set('X-Proxy', 'Meteor')
+        request.headers.set("X-Proxy", "Meteor")
         return request
       },
       handleClient(window) {
-        window.console.log('Meteor is running on the client!')
-        const ws = new WebSocket('wss://echo.websocket.org/')
-        ws.addEventListener('message', (e) => {
+        window.console.log("Meteor is running on the client!")
+        const ws = new WebSocket("wss://echo.websocket.org/")
+        ws.addEventListener("message", e => {
           console.log(e.data)
         })
       }
@@ -30,11 +28,11 @@ export const config: Config = {
   ],
 
   files: {
-    client: '/!/meteor.client.js',
-    worker: '/!/meteor.worker.js',
-    bundle: '/!/meteor.bundle.js',
-    codecs: '/!/meteor.codecs.js',
-    config: '/!/meteor.config.js'
+    client: "/!/meteor.client.js",
+    worker: "/!/meteor.worker.js",
+    bundle: "/!/meteor.bundle.js",
+    codecs: "/!/meteor.codecs.js",
+    config: "/!/meteor.config.js"
   }
 }
 
