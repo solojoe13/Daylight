@@ -1,3 +1,5 @@
+import type { Config } from './types'
+
 export const config: Config = {
   prefix: '/route/',
   codec: self.$meteor_codecs.xor,
