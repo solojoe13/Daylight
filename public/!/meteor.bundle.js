@@ -1,23 +1,23 @@
 // meteor.bundle.js
-import './meteor.config.js';
-import './meteor.codecs.js';
-import './meteor.client.js';
-import './meteor.worker.js';
+import './!/meteor.config.js';
+import './!/meteor.codecs.js';
+import './!/meteor.client.js';
+import './!/meteor.worker.js';
 
 if (!window.Meteor) window.Meteor = {};
 
 Meteor.start = function() {
     console.log("Meteor bundle loaded");
 
-    // Initialize client
+    // Start client
     Meteor.startClient();
 
     // Initialize worker if enabled
     if (Meteor.Config.useWorker) {
         const worker = new Worker('./meteor.worker.js');
         console.log("Meteor worker started");
-        worker.postMessage(Meteor.Codecs.encode({ init: true }));
-        worker.onmessage = (e) => console.log("Worker response:", e.data);
+
+        // Keep global reference
         Meteor.worker = worker;
     }
 
@@ -29,5 +29,5 @@ Meteor.start = function() {
     }
 };
 
-// Auto-start the bundle
+// Auto-start
 Meteor.start();
