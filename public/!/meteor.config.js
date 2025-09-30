@@ -1,8 +1,6 @@
 // meteor.config.js
-// Proxy configuration
-
 Meteor.Config = {
-    proxyUrl: '/proxy', // example path in your public folder
+    proxyUrl: '/proxy',   // Requests starting with this path will be intercepted
     useWorker: true,
     cacheEnabled: true
 };
