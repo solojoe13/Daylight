@@ -28,11 +28,11 @@ export const config: Config = {
   ],
 
   files: {
-    client: '/meteor/meteor.client.js',
-    worker: '/meteor/meteor.worker.js',
-    bundle: '/meteor/meteor.bundle.js',
-    codecs: '/meteor/meteor.codecs.js',
-    config: '/meteor/meteor.config.js'
+    client: '/!/meteor.client.js',
+    worker: '/!/meteor.worker.js',
+    bundle: '/!/meteor.bundle.js',
+    codecs: '/!/meteor.codecs.js',
+    config: '/!/meteor.config.js'
   }
 }
 
