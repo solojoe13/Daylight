@@ -1,6 +1,4 @@
 // meteor.codecs.js
-// Encode/decode messages
-
 Meteor.Codecs = {
     encode: function(obj) {
         return JSON.stringify(obj);
